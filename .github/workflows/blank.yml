@@ -4,7 +4,7 @@ name: Build VX EDITION APK
 on:
   workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -22,11 +22,10 @@ jobs:
 
       - name: Configurar Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          accept-android-sdk-licenses: true
 
-      - name: Aceitar licenças Android
-        run: yes | sdkmanager --licenses || true
-
-      - name: Instalar ferramentas Android
+      - name: Instalar ferramentas
         run: |
           sdkmanager "platform-tools"
           sdkmanager "platforms;android-35"
@@ -36,12 +35,12 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Compilar APK
-        run: |
-          gradle assembleDebug
+        run: gradle assembleDebug
 
-      - name: Guardar APK
+      - name: Disponibilizar APK
         uses: actions/upload-artifact@v4
         with:
           name: VX-EDITION-APK
           path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
           
